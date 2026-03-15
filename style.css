@@ -449,3 +449,23 @@ footer {
     outline: none;
     border-color: var(--primary);
 }
+
+/* Print Styles */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #bill-template, #bill-template * {
+        visibility: visible;
+    }
+    #bill-template {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        display: block !important;
+    }
+    header, footer, .sidebar, .modal, .hero, .products, .services, .stats {
+        display: none !important;
+    }
+}
