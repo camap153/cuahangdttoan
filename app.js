@@ -1,39 +1,27 @@
-const products = [
-    {
-        id: 1,
-        name: "iPhone 15 Pro Max",
-        price: 32990000,
-        image: "iphone15.png",
-        category: "Apple"
-    },
-    {
-        id: 2,
-        name: "Samsung Galaxy S24 Ultra",
-        price: 30990000,
-        image: "s24.png",
-        category: "Samsung"
-    },
-    {
-        id: 3,
-        name: "Xiaomi 14 Pro",
-        price: 18990000,
-        image: "xiaomi14.png",
-        category: "Xiaomi"
-    },
-    {
-        id: 4,
-        name: "Oppo Find X7 Ultra",
-        price: 21990000,
-        image: "oppo.png",
-        category: "Oppo"
-    }
-];
+const PHONE_PRODUCTS_URL = "https://giavinh123-default-rtdb.asia-southeast1.firebasedatabase.app/phone_products.json";
 
+let products = [];
 let cart = [];
 
-function init() {
-    renderProducts();
+async function init() {
+    await fetchProducts();
     setupEventListeners();
+}
+
+async function fetchProducts() {
+    try {
+        const res = await fetch(PHONE_PRODUCTS_URL);
+        const data = await res.json();
+        if (data) {
+            products = Object.keys(data).map(key => ({
+                id: key,
+                ...data[key]
+            }));
+        }
+        renderProducts();
+    } catch (error) {
+        console.error("Error fetching products:", error);
+    }
 }
 
 function renderProducts() {
