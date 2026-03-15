@@ -14,6 +14,7 @@ function init() {
     listenToProducts();
     setupEventListeners();
     setupCategoryFilters();
+    setupCartActions();
 }
 
 function listenToProducts() {
@@ -145,6 +146,75 @@ function setupEventListeners() {
 
     if (cartBtn) cartBtn.addEventListener('click', () => sidebar.classList.add('active'));
     if (closeCart) closeCart.addEventListener('click', () => sidebar.classList.remove('active'));
+}
+
+function setupCartActions() {
+    // Add custom service
+    const addCustomBtn = document.getElementById('add-custom-btn');
+    if (addCustomBtn) {
+        addCustomBtn.addEventListener('click', () => {
+            const nameInput = document.getElementById('custom-name');
+            const priceInput = document.getElementById('custom-price');
+            
+            const name = nameInput.value.trim();
+            const price = parseInt(priceInput.value);
+            
+            if (name && !isNaN(price)) {
+                const customItem = {
+                    id: 'custom-' + Date.now(),
+                    name: name,
+                    price: price,
+                    image: 'phone.png', // Default icon/image
+                    isCustom: true
+                };
+                cart.push(customItem);
+                updateCart();
+                nameInput.value = '';
+                priceInput.value = '';
+            } else {
+                alert('Vui lòng nhập đầy đủ tên dịch vụ và giá tiền hợp lệ.');
+            }
+        });
+    }
+
+    // Checkout and Print
+    const checkoutBtn = document.getElementById('checkout-btn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', () => {
+            if (cart.length === 0) {
+                alert('Giỏ hàng đang trống!');
+                return;
+            }
+            printBill();
+        });
+    }
+}
+
+function printBill() {
+    const billDate = document.getElementById('bill-date');
+    const billItems = document.getElementById('bill-items');
+    const billTotal = document.getElementById('bill-total');
+    
+    if (!billDate || !billItems || !billTotal) return;
+    
+    // Set date
+    const now = new Date();
+    billDate.innerText = `Ngày: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN')}`;
+    
+    // Set items
+    billItems.innerHTML = cart.map(item => `
+        <tr style="border-bottom: 1px solid #eee;">
+            <td style="padding: 10px 0;">${item.name}</td>
+            <td style="text-align: right; padding: 10px 0;">${(item.price || 0).toLocaleString('vi-VN')}đ</td>
+        </tr>
+    `).join('');
+    
+    // Set total
+    const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
+    billTotal.innerText = total.toLocaleString('vi-VN') + 'đ';
+    
+    // Trigger Print
+    window.print();
 }
 
 function setupCategoryFilters() {
