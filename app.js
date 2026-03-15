@@ -11,10 +11,21 @@ let cart = [];
 let currentCategory = 'all';
 
 function init() {
+    // Load cart from localStorage
+    const savedCart = localStorage.getItem('phoneShopCart');
+    if (savedCart) {
+        try {
+            cart = JSON.parse(savedCart);
+        } catch (e) {
+            cart = [];
+        }
+    }
+
     listenToProducts();
     setupEventListeners();
     setupCategoryFilters();
     setupCartActions();
+    updateCart(); // Render initial cart
 }
 
 function listenToProducts() {
@@ -220,17 +231,45 @@ function printBill() {
     html2canvas(billContainer.querySelector('div'), {
         backgroundColor: "#ffffff",
         scale: 2 // Higher quality
-    }).then(canvas => {
+    }).then(async canvas => {
         const link = document.createElement('a');
         link.download = `Bill-ToanStore-${now.getTime()}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
         billContainer.style.display = 'none'; // Hide back
+
+        // Save Order to Firebase
+        await saveOrderToFirebase(cart, total);
+
+        // Clear cart after successful checkout
+        cart = [];
+        saveCartToStorage();
+        updateCart();
+        alert("Đã lưu đơn hàng và xuất hóa đơn thành công!");
     }).catch(err => {
         console.error("Error capturing bill:", err);
         alert("Có lỗi khi tạo ảnh hóa đơn.");
         billContainer.style.display = 'none';
     });
+}
+
+async function saveOrderToFirebase(items, total) {
+    try {
+        const ordersRef = ref(db, 'orders');
+        const newOrderRef = push(ordersRef);
+        await set(newOrderRef, {
+            items: items.map(i => ({ name: i.name, price: i.price })),
+            total: total,
+            createdAt: new Date().toISOString(),
+            status: 'completed'
+        });
+    } catch (error) {
+        console.error("Error saving order:", error);
+    }
+}
+
+function saveCartToStorage() {
+    localStorage.setItem('phoneShopCart', JSON.stringify(cart));
 }
 
 function setupCategoryFilters() {
@@ -251,7 +290,8 @@ function setupCategoryFilters() {
 function addToCart(productId) {
     const product = products.find(p => p.id === productId);
     if (product) {
-        cart.push(product);
+        cart.push({...product});
+        saveCartToStorage();
         updateCart();
         document.getElementById('cart-sidebar').classList.add('active');
     }
@@ -297,6 +337,7 @@ function updateCart() {
 
 function removeFromCart(index) {
     cart.splice(index, 1);
+    saveCartToStorage();
     updateCart();
 }
 
