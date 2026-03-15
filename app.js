@@ -365,7 +365,7 @@ function updateCart() {
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
                             <div style="display: flex; align-items: center; gap: 4px;">
                                 <input type="number" class="price-edit-input" data-key="${itemKey}" value="${item.price}" 
-                                    style="width: 80px; font-size: 0.85rem; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: var(--primary);">
+                                    style="width: 85px; font-size: 0.85rem; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: var(--primary); text-align: right;">
                                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">đ</span>
                             </div>
                             <div style="display: flex; align-items: center; gap: 4px; background: #f1f5f9; padding: 2px 4px; border-radius: 8px;">
