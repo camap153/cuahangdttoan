@@ -13,10 +13,12 @@ let currentCategory = 'all';
 function init() {
     // Load cart from localStorage
     const savedCart = localStorage.getItem('phoneShopCart');
+    console.log("Loading cart from storage:", savedCart);
     if (savedCart) {
         try {
             cart = JSON.parse(savedCart);
         } catch (e) {
+            console.error("Error parsing saved cart:", e);
             cart = [];
         }
     }
@@ -267,8 +269,8 @@ function printBill() {
     });
 }
 
-async function saveOrderToFirebase(items, total) {
     try {
+        console.log("Saving order to Firebase...", items, total);
         const ordersRef = ref(db, 'orders');
         const newOrderRef = push(ordersRef);
         await set(newOrderRef, {
@@ -279,8 +281,9 @@ async function saveOrderToFirebase(items, total) {
             })),
             total: total,
             createdAt: new Date().toISOString(),
-            status: 'completed'
+            status: 'pending' // Default to pending
         });
+        console.log("Order saved successfully!");
     } catch (error) {
         console.error("Error saving order:", error);
         alert("Lỗi khi lưu đơn hàng vào hệ thống: " + error.message);
@@ -288,6 +291,7 @@ async function saveOrderToFirebase(items, total) {
 }
 
 function saveCartToStorage() {
+    console.log("Saving cart to storage:", cart);
     localStorage.setItem('phoneShopCart', JSON.stringify(cart));
 }
 
@@ -318,23 +322,38 @@ function addToCart(productId) {
 
 function updateCart() {
     const cartCount = document.querySelector('.cart-count');
-    if (cartCount) cartCount.innerText = cart.length;
-
     const cartItems = document.getElementById('cart-items');
     const cartTotal = document.getElementById('cart-total');
+
+    // Update cart count
+    if (cartCount) cartCount.innerText = cart.length;
 
     if (cartItems) {
         if (cart.length === 0) {
             cartItems.innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 2rem;">Giỏ hàng trống</p>';
         } else {
-            cartItems.innerHTML = cart.map((item, index) => `
+            // Group items for display
+            const grouped = cart.reduce((acc, item) => {
+                const key = item.id || (item.name + item.price);
+                if (!acc[key]) {
+                    acc[key] = { ...item, displayQty: 1, originalIndices: [cart.indexOf(item)] };
+                } else {
+                    acc[key].displayQty += 1;
+                }
+                return acc;
+            }, {});
+
+            cartItems.innerHTML = Object.values(grouped).map((item) => `
                 <div class="cart-item" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
                     <img src="${item.image ? (item.image.startsWith('http') ? item.image : 'hinhsanpham/' + item.image) : ''}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: contain; background: #f8fafc; border-radius: 8px;">
                     <div style="flex: 1;">
                         <h4 style="font-size: 0.9rem;">${item.name}</h4>
-                        <p style="color: var(--primary); font-weight: 600;">${(item.price || 0).toLocaleString('vi-VN')}đ</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <p style="color: var(--primary); font-weight: 600;">${(item.price || 0).toLocaleString('vi-VN')}đ</p>
+                            <p style="font-size: 0.8rem; background: #f1f5f9; padding: 2px 8px; border-radius: 12px;">SL: ${item.displayQty}</p>
+                        </div>
                     </div>
-                    <button class="remove-btn" data-index="${index}" style="background: none; border: none; color: #ef4444; cursor: pointer;">
+                    <button class="remove-btn" data-key="${item.id || (item.name + item.price)}" style="background: none; border: none; color: #ef4444; cursor: pointer;">
                         <i data-lucide="trash-2" style="width: 18px;"></i>
                     </button>
                 </div>
@@ -342,8 +361,8 @@ function updateCart() {
             
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
-                    const idx = parseInt(btn.getAttribute('data-index'));
-                    removeFromCart(idx);
+                    const key = btn.getAttribute('data-key');
+                    removeGroupFromCart(key);
                 });
             });
         }
@@ -352,6 +371,13 @@ function updateCart() {
     const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
     if (cartTotal) cartTotal.innerText = total.toLocaleString('vi-VN') + 'đ';
     if (window.lucide) lucide.createIcons();
+}
+
+function removeGroupFromCart(key) {
+    // Remove all items with this key
+    cart = cart.filter(item => (item.id || (item.name + item.price)) !== key);
+    saveCartToStorage();
+    updateCart();
 }
 
 function removeFromCart(index) {
