@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toàn Store - Điện Thoại & Sửa Chữa Chuyên Nghiệp</title>
+    <meta name="description" content="Chuyên mua bán và sửa chữa điện thoại uy tín, chất lượng tại Việt Nam.">
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <header id="main-header">
+        <nav class="container">
+            <div class="logo">Toàn Store</div>
+            <ul class="nav-links">
+                <li><a href="#home">Trang Chủ</a></li>
+                <li><a href="#shop">Cửa Hàng</a></li>
+                <li><a href="#services">Dịch Vụ Sửa Chữa</a></li>
+                <li><a href="#contact">Liên Hệ</a></li>
+            </ul>
+            <div class="header-actions">
+                <button id="cart-btn" class="icon-btn"><i data-lucide="shopping-cart"></i><span class="cart-count">0</span></button>
+            </div>
+            <div class="menu-toggle" id="mobile-menu">
+                <i data-lucide="menu"></i>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="container hero-content">
+                <div class="hero-text">
+                    <span class="badge">Uy Tín - Chất Lượng</span>
+                    <h1>Nâng Tầm Trải Nghiệm Công Nghệ</h1>
+                    <p>Cung cấp các dòng smartphone mới nhất và dịch vụ sửa chữa lấy ngay chuyên nghiệp.</p>
+                    <div class="hero-btns">
+                        <a href="#shop" class="btn btn-primary">Mua Ngay</a>
+                        <a href="#services" class="btn btn-secondary">Đặt Lịch Sửa Chữa</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <!-- Placeholder image path -->
+                    <img id="hero-img" src="hero-phone.png" alt="Premium Smartphone">
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats container">
+            <div class="stat-item">
+                <i data-lucide="award"></i>
+                <div class="stat-info">
+                    <h3>100%</h3>
+                    <p>Chất lượng</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i data-lucide="truck"></i>
+                <div class="stat-info">
+                    <h3>Miễn phí</h3>
+                    <p>Vận chuyển</p>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i data-lucide="shield-check"></i>
+                <div class="stat-info">
+                    <h3>Bảo hành</h3>
+                    <p>Trọn đời</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Products -->
+        <section id="shop" class="products container">
+            <div class="section-header">
+                <h2>Sản Phẩm Nổi Bật</h2>
+                <a href="#" class="view-all">Xem tất cả <i data-lucide="chevron-right"></i></a>
+            </div>
+            <div class="product-grid" id="product-list">
+                <!-- Products will be injected by JS -->
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="services">
+            <div class="container">
+                <div class="section-header center">
+                    <h2>Dịch Vụ Sửa Chữa</h2>
+                    <p>Đội ngũ kỹ thuật viên giàu kinh nghiệm, linh kiện chính hãng.</p>
+                </div>
+                <div class="service-grid">
+                    <div class="service-card">
+                        <i data-lucide="smartphone"></i>
+                        <h3>Thay Màn Hình</h3>
+                        <p>Thay thế màn hình chính hãng, bảo hành lâu dài.</p>
+                    </div>
+                    <div class="service-card">
+                        <i data-lucide="battery"></i>
+                        <h3>Thay Pin</h3>
+                        <p>Pin chất lượng cao, sạc nhanh, an toàn tuyệt đối.</p>
+                    </div>
+                    <div class="service-card">
+                        <i data-lucide="wrench"></i>
+                        <h3>Sửa Chữa Phần Cứng</h3>
+                        <p>Xử lý mọi vấn đề từ IC nguồn, camera đến loa mic.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <div class="logo">Toàn Store</div>
+                <p>Nơi trao niềm tin, nhận giá trị.</p>
+            </div>
+            <div class="footer-links">
+                <h4>Khám Phá</h4>
+                <ul>
+                    <li><a href="#">Sản Phẩm</a></li>
+                    <li><a href="#">Dịch Vụ</a></li>
+                    <li><a href="#">Về Chúng Tôi</a></li>
+                </ul>
+            </div>
+            <div class="footer-contact">
+                <h4>Liên Hệ</h4>
+                <p><i data-lucide="map-pin"></i> 123 Đường Công Nghệ, TP. HCM</p>
+                <p><i data-lucide="phone"></i> 0123 456 789</p>
+                <p><i data-lucide="mail"></i> info@toanstore.vn</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Toàn Store. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <h3>Giỏ Hàng</h3>
+            <button id="close-cart" class="icon-btn"><i data-lucide="x"></i></button>
+        </div>
+        <div id="cart-items">
+            <!-- Items injected by JS -->
+        </div>
+        <div class="cart-footer">
+            <div class="total">Tổng cộng: <span id="cart-total">0đ</span></div>
+            <button class="btn btn-primary full-width">Thanh Toán</button>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
