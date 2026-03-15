@@ -237,14 +237,25 @@ function printBill() {
     const itemsArray = Object.values(groupedItems);
     
     // Set items in bill
-    billItems.innerHTML = itemsArray.map(item => `
-        <tr style="border-bottom: 1px dashed #000; font-size: 13px;">
-            <td style="padding: 10px 0; width: 45%; vertical-align: top; overflow-wrap: break-word; line-height: 1.3;">${item.name}</td>
-            <td style="text-align: center; padding: 10px 0; width: 10%; vertical-align: top;">${item.quantity}</td>
-            <td style="text-align: right; padding: 10px 0; width: 22%; vertical-align: top; white-space: nowrap;">${(item.price || 0).toLocaleString('vi-VN')}</td>
-            <td style="text-align: right; padding: 10px 0; width: 23%; vertical-align: top; font-weight: bold; white-space: nowrap;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
+    billItems.innerHTML = itemsArray.map(item => {
+        const pStr = (item.price || 0).toLocaleString('vi-VN');
+        const tStr = ((item.price || 0) * item.quantity).toLocaleString('vi-VN');
+        
+        // Adaptive font size based on string length
+        const getFontSize = (str) => {
+            if (str.length > 10) return '10px';
+            if (str.length > 8) return '11.5px';
+            return '13px';
+        };
+
+        return `
+        <tr style="border-bottom: 1px dashed #000;">
+            <td style="padding: 10px 0; width: 42%; vertical-align: top; overflow-wrap: break-word; line-height: 1.2; font-size: 13px;">${item.name}</td>
+            <td style="text-align: center; padding: 10px 0; width: 8%; vertical-align: top; font-size: 11px;">${item.quantity}</td>
+            <td style="text-align: right; padding: 10px 0; width: 25%; vertical-align: top; white-space: nowrap; font-size: ${getFontSize(pStr)};">${pStr}</td>
+            <td style="text-align: right; padding: 10px 0; width: 25%; vertical-align: top; font-weight: bold; white-space: nowrap; font-size: ${getFontSize(tStr)};">${tStr}</td>
         </tr>
-    `).join('');
+    `}).join('');
     
     // Set total
     const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
