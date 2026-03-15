@@ -8,10 +8,12 @@ const db = getDatabase(app);
 
 let products = [];
 let cart = [];
+let currentCategory = 'all';
 
 function init() {
     listenToProducts();
     setupEventListeners();
+    setupCategoryFilters();
 }
 
 function listenToProducts() {
@@ -34,7 +36,11 @@ function renderProducts() {
     const productList = document.getElementById('product-list');
     if (!productList) return;
     
-    productList.innerHTML = products.map(product => `
+    const filteredProducts = currentCategory === 'all' 
+        ? products 
+        : products.filter(p => p.category === currentCategory);
+
+    productList.innerHTML = filteredProducts.map(product => `
         <div class="product-card">
             <div class="product-img-wrapper" style="background: #f1f5f9; border-radius: 8px; margin-bottom: 1rem; padding: 1rem;">
                 <img src="${product.image ? (product.image.startsWith('http') ? product.image : 'hinhsanpham/' + product.image) : ''}" alt="${product.name}" style="width: 100%; height: 200px; object-fit: contain;">
@@ -139,6 +145,21 @@ function setupEventListeners() {
 
     if (cartBtn) cartBtn.addEventListener('click', () => sidebar.classList.add('active'));
     if (closeCart) closeCart.addEventListener('click', () => sidebar.classList.remove('active'));
+}
+
+function setupCategoryFilters() {
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Update active state
+            filterBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            // Set category and re-render
+            currentCategory = btn.getAttribute('data-category');
+            renderProducts();
+        });
+    });
 }
 
 function addToCart(productId) {
