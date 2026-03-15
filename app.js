@@ -213,10 +213,24 @@ function printBill() {
     const now = new Date();
     billDate.innerText = `Ngày: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN')}`;
     
-    // Set items
-    billItems.innerHTML = cart.map(item => `
+    // Group items by ID or Name+Price
+    const groupedItems = cart.reduce((acc, item) => {
+        const key = item.id || (item.name + item.price);
+        if (!acc[key]) {
+            acc[key] = { ...item, quantity: 1 };
+        } else {
+            acc[key].quantity += 1;
+        }
+        return acc;
+    }, {});
+    
+    const itemsArray = Object.values(groupedItems);
+    
+    // Set items in bill
+    billItems.innerHTML = itemsArray.map(item => `
         <tr style="border-bottom: 1px solid #eee;">
             <td style="padding: 10px 0;">${item.name}</td>
+            <td style="text-align: center; padding: 10px 0;">${item.quantity}</td>
             <td style="text-align: right; padding: 10px 0;">${(item.price || 0).toLocaleString('vi-VN')}đ</td>
         </tr>
     `).join('');
@@ -238,8 +252,8 @@ function printBill() {
         link.click();
         billContainer.style.display = 'none'; // Hide back
 
-        // Save Order to Firebase
-        await saveOrderToFirebase(cart, total);
+        // Save Order to Firebase with grouped items
+        await saveOrderToFirebase(itemsArray, total);
 
         // Clear cart after successful checkout
         cart = [];
@@ -258,7 +272,11 @@ async function saveOrderToFirebase(items, total) {
         const ordersRef = ref(db, 'orders');
         const newOrderRef = push(ordersRef);
         await set(newOrderRef, {
-            items: items.map(i => ({ name: i.name, price: i.price })),
+            items: items.map(i => ({ 
+                name: i.name, 
+                price: i.price, 
+                quantity: i.quantity 
+            })),
             total: total,
             createdAt: new Date().toISOString(),
             status: 'completed'
