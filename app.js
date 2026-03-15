@@ -191,11 +191,12 @@ function setupCartActions() {
 }
 
 function printBill() {
+    const billContainer = document.getElementById('bill-template');
     const billDate = document.getElementById('bill-date');
     const billItems = document.getElementById('bill-items');
     const billTotal = document.getElementById('bill-total');
     
-    if (!billDate || !billItems || !billTotal) return;
+    if (!billContainer || !billDate || !billItems || !billTotal) return;
     
     // Set date
     const now = new Date();
@@ -213,8 +214,23 @@ function printBill() {
     const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
     billTotal.innerText = total.toLocaleString('vi-VN') + 'đ';
     
-    // Trigger Print
-    window.print();
+    // Capture and Download as Image
+    billContainer.style.display = 'block'; // Briefly show for capture
+    
+    html2canvas(billContainer.querySelector('div'), {
+        backgroundColor: "#ffffff",
+        scale: 2 // Higher quality
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `Bill-ToanStore-${now.getTime()}.png`;
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+        billContainer.style.display = 'none'; // Hide back
+    }).catch(err => {
+        console.error("Error capturing bill:", err);
+        alert("Có lỗi khi tạo ảnh hóa đơn.");
+        billContainer.style.display = 'none';
+    });
 }
 
 function setupCategoryFilters() {
