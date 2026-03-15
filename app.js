@@ -217,9 +217,11 @@ function printBill() {
     const customerName = customerInput ? customerInput.value.trim() : "";
     billCustomer.innerText = customerName || "Khách lẻ";
 
-    // Set date
+    // Set date and ID
     const now = new Date();
     billDate.innerText = `Ngày: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN')}`;
+    const billIdDisplay = document.getElementById('bill-id-display');
+    if (billIdDisplay) billIdDisplay.innerText = `Số HĐ: ${Math.floor(now.getTime() / 1000)}`;
     
     // Group items by ID or Name+Price
     const groupedItems = cart.reduce((acc, item) => {
@@ -236,10 +238,11 @@ function printBill() {
     
     // Set items in bill
     billItems.innerHTML = itemsArray.map(item => `
-        <tr style="border-bottom: 1px solid #eee;">
-            <td style="padding: 10px 0;">${item.name}</td>
-            <td style="text-align: center; padding: 10px 0;">${item.quantity}</td>
-            <td style="text-align: right; padding: 10px 0;">${(item.price || 0).toLocaleString('vi-VN')}đ</td>
+        <tr style="border-bottom: 1px dashed #eee;">
+            <td style="padding: 5px 0; max-width: 180px;">${item.name}</td>
+            <td style="text-align: center; padding: 5px 2px;">${item.quantity}</td>
+            <td style="text-align: right; padding: 5px 2px;">${(item.price || 0).toLocaleString('vi-VN')}</td>
+            <td style="text-align: right; padding: 5px 0;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
         </tr>
     `).join('');
     
@@ -362,10 +365,14 @@ function updateCart() {
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
                             <div style="display: flex; align-items: center; gap: 4px;">
                                 <input type="number" class="price-edit-input" data-key="${itemKey}" value="${item.price}" 
-                                    style="width: 100px; font-size: 0.85rem; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: var(--primary);">
+                                    style="width: 80px; font-size: 0.85rem; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: var(--primary);">
                                 <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">đ</span>
                             </div>
-                            <p style="font-size: 0.8rem; background: #f1f5f9; padding: 2px 8px; border-radius: 12px;">SL: ${item.displayQty}</p>
+                            <div style="display: flex; align-items: center; gap: 4px; background: #f1f5f9; padding: 2px 4px; border-radius: 8px;">
+                                <span style="font-size: 0.75rem; color: #64748b;">SL:</span>
+                                <input type="number" class="qty-edit-input" data-key="${itemKey}" value="${item.displayQty}" 
+                                    style="width: 45px; font-size: 0.85rem; padding: 0 2px; border: none; background: transparent; text-align: center; font-weight: 600;">
+                            </div>
                         </div>
                     </div>
                     <button class="remove-btn" data-key="${itemKey}" style="background: none; border: none; color: #ef4444; cursor: pointer;">
@@ -383,6 +390,15 @@ function updateCart() {
                 });
             });
 
+            // Add qty edit listeners
+            document.querySelectorAll('.qty-edit-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const key = e.target.getAttribute('data-key');
+                    const newQty = parseInt(e.target.value) || 1;
+                    updateItemQuantity(key, newQty);
+                });
+            });
+
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const key = btn.getAttribute('data-key');
@@ -395,6 +411,27 @@ function updateCart() {
     const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
     if (cartTotal) cartTotal.innerText = total.toLocaleString('vi-VN') + 'đ';
     if (window.lucide) lucide.createIcons();
+}
+
+function updateItemQuantity(key, newQty) {
+    if (newQty < 1) newQty = 1;
+    
+    // Find first occurrence to keep as reference
+    const index = cart.findIndex(item => (item.id || (item.name + item.price)) === key);
+    if (index === -1) return;
+    
+    const baseItem = { ...cart[index] };
+    
+    // Remove all old versions of this group
+    cart = cart.filter(item => (item.id || (item.name + item.price)) !== key);
+    
+    // Add back the new quantity
+    for (let i = 0; i < newQty; i++) {
+        cart.push({ ...baseItem });
+    }
+    
+    saveCartToStorage();
+    updateCart();
 }
 
 function updateItemPrice(key, newPrice) {
