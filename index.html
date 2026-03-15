@@ -186,9 +186,12 @@
         </div>
     </div>
 
-    <script src="app.js"></script>
+    <script type="module" src="app.js"></script>
     <script>
-        lucide.createIcons();
+        // Lucide needs to be available globally or handled in the module
+        window.addEventListener('load', () => {
+            if (window.lucide) lucide.createIcons();
+        });
     </script>
 </body>
 </html>
