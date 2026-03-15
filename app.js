@@ -37,7 +37,7 @@ function renderProducts() {
     productList.innerHTML = products.map(product => `
         <div class="product-card">
             <div class="product-img-wrapper" style="background: #f1f5f9; border-radius: 8px; margin-bottom: 1rem; padding: 1rem;">
-                <img src="${product.image}" alt="${product.name}" style="width: 100%; height: 200px; object-fit: contain;">
+                <img src="${product.image ? (product.image.startsWith('http') ? product.image : 'hinhsanpham/' + product.image) : ''}" alt="${product.name}" style="width: 100%; height: 200px; object-fit: contain;">
             </div>
             <h3 style="font-size: 1.1rem; margin-bottom: 0.5rem;">${product.name}</h3>
             <p style="color: var(--primary); font-weight: 700; font-size: 1.25rem; margin-bottom: 1.5rem;">
@@ -156,7 +156,7 @@ function updateCart() {
         } else {
             cartItems.innerHTML = cart.map((item, index) => `
                 <div class="cart-item" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
-                    <img src="${item.image}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: contain; background: #f8fafc; border-radius: 8px;">
+                    <img src="${item.image ? (item.image.startsWith('http') ? item.image : 'hinhsanpham/' + item.image) : ''}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: contain; background: #f8fafc; border-radius: 8px;">
                     <div style="flex: 1;">
                         <h4 style="font-size: 0.9rem;">${item.name}</h4>
                         <p style="color: var(--primary); font-weight: 600;">${(item.price || 0).toLocaleString('vi-VN')}đ</p>
