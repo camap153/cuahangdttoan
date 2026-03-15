@@ -238,11 +238,11 @@ function printBill() {
     
     // Set items in bill
     billItems.innerHTML = itemsArray.map(item => `
-        <tr style="border-bottom: 1px dashed #eee;">
-            <td style="padding: 5px 0; max-width: 170px; word-break: break-all;">${item.name}</td>
-            <td style="text-align: center; padding: 5px 0;">${item.quantity}</td>
-            <td style="text-align: right; padding: 5px 0; white-space: nowrap;">${(item.price || 0).toLocaleString('vi-VN')}</td>
-            <td style="text-align: right; padding: 5px 0; font-weight: bold; white-space: nowrap;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
+        <tr style="border-bottom: 1px dashed #000; font-size: 13px;">
+            <td style="padding: 10px 0; width: 45%; vertical-align: top; overflow-wrap: break-word; line-height: 1.3;">${item.name}</td>
+            <td style="text-align: center; padding: 10px 0; width: 10%; vertical-align: top;">${item.quantity}</td>
+            <td style="text-align: right; padding: 10px 0; width: 22%; vertical-align: top; white-space: nowrap;">${(item.price || 0).toLocaleString('vi-VN')}</td>
+            <td style="text-align: right; padding: 10px 0; width: 23%; vertical-align: top; font-weight: bold; white-space: nowrap;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
         </tr>
     `).join('');
     
