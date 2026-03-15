@@ -239,10 +239,10 @@ function printBill() {
     // Set items in bill
     billItems.innerHTML = itemsArray.map(item => `
         <tr style="border-bottom: 1px dashed #eee;">
-            <td style="padding: 5px 0; max-width: 180px;">${item.name}</td>
-            <td style="text-align: center; padding: 5px 2px;">${item.quantity}</td>
-            <td style="text-align: right; padding: 5px 2px;">${(item.price || 0).toLocaleString('vi-VN')}</td>
-            <td style="text-align: right; padding: 5px 0;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
+            <td style="padding: 5px 0; max-width: 170px; word-break: break-all;">${item.name}</td>
+            <td style="text-align: center; padding: 5px 0;">${item.quantity}</td>
+            <td style="text-align: right; padding: 5px 0; white-space: nowrap;">${(item.price || 0).toLocaleString('vi-VN')}</td>
+            <td style="text-align: right; padding: 5px 0; font-weight: bold; white-space: nowrap;">${((item.price || 0) * item.quantity).toLocaleString('vi-VN')}</td>
         </tr>
     `).join('');
     
