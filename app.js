@@ -76,12 +76,19 @@ function setupEventListeners() {
     // Modal Logic
     const repairModal = document.getElementById('repair-modal');
     const closeRepair = document.getElementById('close-modal');
-    const serviceBtns = document.querySelectorAll('.btn-secondary[href="#services"]');
+    const serviceBtns = document.querySelectorAll('.btn-secondary[href="#services"], .service-card');
 
     serviceBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             repairModal.classList.add('active');
+            
+            // If it's a service card, pre-fill the service field
+            if (btn.classList.contains('service-card')) {
+                const serviceName = btn.querySelector('h3').innerText;
+                const serviceInput = document.getElementById('service');
+                if (serviceInput) serviceInput.value = serviceName;
+            }
         });
     });
 
