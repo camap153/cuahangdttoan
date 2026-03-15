@@ -352,22 +352,37 @@ function updateCart() {
                 return acc;
             }, {});
 
-            cartItems.innerHTML = Object.values(grouped).map((item) => `
+            cartItems.innerHTML = Object.values(grouped).map((item) => {
+                const itemKey = item.id || (item.name + item.price);
+                return `
                 <div class="cart-item" style="display: flex; gap: 1rem; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border);">
                     <img src="${item.image ? (item.image.startsWith('http') ? item.image : 'hinhsanpham/' + item.image) : ''}" alt="${item.name}" style="width: 60px; height: 60px; object-fit: contain; background: #f8fafc; border-radius: 8px;">
                     <div style="flex: 1;">
                         <h4 style="font-size: 0.9rem;">${item.name}</h4>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <p style="color: var(--primary); font-weight: 600;">${(item.price || 0).toLocaleString('vi-VN')}đ</p>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 4px;">
+                            <div style="display: flex; align-items: center; gap: 4px;">
+                                <input type="number" class="price-edit-input" data-key="${itemKey}" value="${item.price}" 
+                                    style="width: 100px; font-size: 0.85rem; padding: 2px 4px; border: 1px solid #cbd5e1; border-radius: 4px; font-weight: 600; color: var(--primary);">
+                                <span style="font-size: 0.8rem; font-weight: 600; color: var(--primary);">đ</span>
+                            </div>
                             <p style="font-size: 0.8rem; background: #f1f5f9; padding: 2px 8px; border-radius: 12px;">SL: ${item.displayQty}</p>
                         </div>
                     </div>
-                    <button class="remove-btn" data-key="${item.id || (item.name + item.price)}" style="background: none; border: none; color: #ef4444; cursor: pointer;">
+                    <button class="remove-btn" data-key="${itemKey}" style="background: none; border: none; color: #ef4444; cursor: pointer;">
                         <i data-lucide="trash-2" style="width: 18px;"></i>
                     </button>
                 </div>
-            `).join('');
+            `}).join('');
             
+            // Add price edit listeners
+            document.querySelectorAll('.price-edit-input').forEach(input => {
+                input.addEventListener('change', (e) => {
+                    const key = e.target.getAttribute('data-key');
+                    const newPrice = parseInt(e.target.value) || 0;
+                    updateItemPrice(key, newPrice);
+                });
+            });
+
             document.querySelectorAll('.remove-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const key = btn.getAttribute('data-key');
@@ -380,6 +395,17 @@ function updateCart() {
     const total = cart.reduce((sum, item) => sum + (item.price || 0), 0);
     if (cartTotal) cartTotal.innerText = total.toLocaleString('vi-VN') + 'đ';
     if (window.lucide) lucide.createIcons();
+}
+
+function updateItemPrice(key, newPrice) {
+    cart.forEach(item => {
+        const itemKey = item.id || (item.name + item.price);
+        if (itemKey === key) {
+            item.price = newPrice;
+        }
+    });
+    saveCartToStorage();
+    updateCart();
 }
 
 function removeGroupFromCart(key) {
