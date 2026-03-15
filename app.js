@@ -269,7 +269,7 @@ function printBill() {
         scale: 2 // Higher quality
     }).then(async canvas => {
         const link = document.createElement('a');
-        link.download = `Bill-ToanStore-${now.getTime()}.png`;
+        link.download = `Bill-2TMobile-${now.getTime()}.png`;
         link.href = canvas.toDataURL("image/png");
         link.click();
         billContainer.style.display = 'none'; // Hide back
