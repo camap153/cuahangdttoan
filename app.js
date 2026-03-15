@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 import { firebaseConfig } from "./firebase-config.js";
 
 // Initialize Firebase
@@ -98,11 +98,30 @@ function setupEventListeners() {
     // Form Submit
     const repairForm = document.getElementById('repair-form');
     if (repairForm) {
-        repairForm.addEventListener('submit', (e) => {
+        repairForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            alert('Cảm ơn bạn! Chúng tôi sẽ liên hệ trong ít phút để xác nhận yêu cầu sửa chữa.');
-            repairModal.classList.remove('active');
-            repairForm.reset();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                service: document.getElementById('service').value,
+                message: document.getElementById('message').value,
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const bookingsRef = ref(db, 'bookings');
+                const newBookingRef = push(bookingsRef);
+                await set(newBookingRef, formData);
+                
+                alert('Cảm ơn bạn! Chúng tôi đã nhận được yêu cầu và sẽ liên hệ trong ít phút.');
+                repairModal.classList.remove('active');
+                repairForm.reset();
+            } catch (error) {
+                console.error("Error saving booking:", error);
+                alert('Có lỗi xảy ra, vui lòng thử lại sau.');
+            }
         });
     }
 
