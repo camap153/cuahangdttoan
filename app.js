@@ -283,6 +283,7 @@ async function saveOrderToFirebase(items, total) {
         });
     } catch (error) {
         console.error("Error saving order:", error);
+        alert("Lỗi khi lưu đơn hàng vào hệ thống: " + error.message);
     }
 }
 
