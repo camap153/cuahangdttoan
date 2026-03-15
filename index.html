@@ -210,17 +210,50 @@
         </div>
     </div>
 
-                    <p>Khách hàng</p>
-                    <p style="margin-top: 60px;">(Ký tên)</p>
-                </div>
-                <div style="width: 200px;">
-                    <p>Người lập phiếu</p>
-                    <p style="margin-top: 60px;">(Ký tên)</p>
+    <!-- Bill Template (K57 Supermarket Style) -->
+    <div id="bill-template" style="display: none; position: fixed; left: -9999px; top: -9999px;">
+        <div style="width: 384px; padding: 20px; font-family: 'Courier New', Courier, monospace; line-height: 1.2; color: #000; background: #fff;">
+            <div style="text-align: center; margin-bottom: 10px;">
+                <h2 style="margin: 0; font-size: 24px; font-weight: bold;">TOÀN STORE</h2>
+                <p style="margin: 5px 0; font-size: 14px;">ĐC: 59 Thoại Ngọc Hầu, Đông Sơn 1, Thoại Sơn, AG</p>
+                <p style="margin: 2px 0; font-size: 14px;">ĐT: 0819906706</p>
+                <div style="margin: 10px 0; border-top: 1px dashed #000;"></div>
+                <h3 style="margin: 5px 0; font-size: 18px; font-weight: bold;">HÓA ĐƠN BÁN LẺ</h3>
+                <p id="bill-date" style="margin: 2px 0; font-size: 13px; font-style: italic;"></p>
+                <p id="bill-id-display" style="margin: 2px 0; font-size: 13px;"></p>
+            </div>
+            
+            <div style="margin-bottom: 10px; font-size: 14px;">
+                <b>Khách hàng:</b> <span id="bill-customer-name">Khách lẻ</span>
+            </div>
+            
+            <div style="border-top: 1px dashed #000; padding: 5px 0;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+                    <thead>
+                        <tr style="border-bottom: 1px dashed #000;">
+                            <th style="text-align: left; padding: 5px 0;">TÊN HÀNG</th>
+                            <th style="text-align: center; padding: 5px 2px;">SL</th>
+                            <th style="text-align: right; padding: 5px 2px;">Đ.GIÁ</th>
+                            <th style="text-align: right; padding: 5px 0;">T.TIỀN</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bill-items">
+                        <!-- Items populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div style="border-top: 1px dashed #000; padding-top: 10px; margin-top: 5px;">
+                <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 15px;">
+                    <span>TỔNG TIỀN:</span>
+                    <span id="bill-total">0đ</span>
                 </div>
             </div>
             
-            <div style="text-align: center; margin-top: 80px; font-size: 12px; color: #666; font-style: italic;">
-                Cảm ơn Quý khách đã tin tưởng và sử dụng dịch vụ tại Toàn Store!
+            <div style="margin-top: 20px; text-align: center;">
+                <div style="border-top: 1px dashed #000; margin-bottom: 10px;"></div>
+                <p style="margin: 0; font-weight: bold; font-size: 14px;">CẢM ƠN QUÝ KHÁCH!</p>
+                <p style="margin: 5px 0 0; font-size: 12px;">Hẹn gặp lại quý khách!</p>
             </div>
         </div>
     </div>
