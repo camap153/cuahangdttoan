@@ -208,9 +208,15 @@ function printBill() {
     const billDate = document.getElementById('bill-date');
     const billItems = document.getElementById('bill-items');
     const billTotal = document.getElementById('bill-total');
+    const billCustomer = document.getElementById('bill-customer-name');
+    const customerInput = document.getElementById('customer-name');
     
-    if (!billContainer || !billDate || !billItems || !billTotal) return;
+    if (!billContainer || !billDate || !billItems || !billTotal || !billCustomer) return;
     
+    // Set customer name
+    const customerName = customerInput ? customerInput.value.trim() : "";
+    billCustomer.innerText = customerName || "Khách lẻ";
+
     // Set date
     const now = new Date();
     billDate.innerText = `Ngày: ${now.toLocaleDateString('vi-VN')} ${now.toLocaleTimeString('vi-VN')}`;
@@ -255,10 +261,11 @@ function printBill() {
         billContainer.style.display = 'none'; // Hide back
 
         // Save Order to Firebase with grouped items
-        await saveOrderToFirebase(itemsArray, total);
+        await saveOrderToFirebase(itemsArray, total, customerName);
 
         // Clear cart after successful checkout
         cart = [];
+        if (customerInput) customerInput.value = '';
         saveCartToStorage();
         updateCart();
         alert("Đã lưu đơn hàng và xuất hóa đơn thành công!");
@@ -269,11 +276,13 @@ function printBill() {
     });
 }
 
+async function saveOrderToFirebase(items, total, customerName) {
     try {
-        console.log("Saving order to Firebase...", items, total);
+        console.log("Saving order to Firebase...", items, total, customerName);
         const ordersRef = ref(db, 'orders');
         const newOrderRef = push(ordersRef);
         await set(newOrderRef, {
+            customer: customerName || "Khách lẻ",
             items: items.map(i => ({ 
                 name: i.name, 
                 price: i.price, 

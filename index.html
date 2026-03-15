@@ -171,6 +171,9 @@
                 <button id="add-custom-btn" class="btn btn-secondary" style="font-size: 0.8rem; padding: 0.5rem;">Thêm vào giỏ</button>
             </div>
         </div>
+        <div class="customer-info-form" style="padding: 1rem; border-top: 1px solid var(--border);">
+            <input type="text" id="customer-name" placeholder="Tên khách hàng (VD: Anh An)" style="width: 100%; font-size: 0.9rem; padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px;">
+        </div>
 
         <div class="cart-footer">
             <div class="total">Tổng cộng: <span id="cart-total">0đ</span></div>
@@ -216,6 +219,10 @@
                 <p style="margin: 5px 0;">Hotline: 0123 456 789</p>
                 <h2 style="margin: 20px 0 0; font-size: 22px;">HÓA ĐƠN BÁN HÀNG</h2>
                 <p id="bill-date" style="margin: 5px 0; font-style: italic;"></p>
+            </div>
+            
+            <div style="margin-bottom: 20px; font-weight: bold;">
+                Khách hàng: <span id="bill-customer-name">Loại trực tiếp</span>
             </div>
             
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
